@@ -27,7 +27,7 @@
 
 package codeanticode.planetarium;
 
-import java.net.URL;
+import java.lang.reflect.Method;
 import java.nio.IntBuffer;
 
 import processing.core.PApplet;
@@ -41,7 +41,6 @@ import processing.opengl.PShader;
  * Basic dome renderer.
  * 
  */
-
 public class Dome extends PGraphics3D {
   public final static String RENDERER = "codeanticode.planetarium.Dome";	
 	public final static String VERSION  = "##library.prettyVersion##";
@@ -71,7 +70,16 @@ public class Dome extends PGraphics3D {
 	
   public void setParent(PApplet parent) {  // ignore
     super.setParent(parent);
-    parent.registerMethod("pre", parent);
+    
+    Class<?> c = parent.getClass();
+    Method method = null;
+    try {
+      method = c.getMethod("pre", new Class[] {});
+    } catch (NoSuchMethodException nsme) {
+    }
+    if (method != null) {
+      parent.registerMethod("pre", parent);
+    }
   }
   
 	
@@ -224,7 +232,6 @@ public class Dome extends PGraphics3D {
   
   private void beginFaceDraw(int face) {
     currentFace = face; 
-    System.out.println("Drawing face " + face);
     
     resetMatrix();
     
