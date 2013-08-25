@@ -29,6 +29,7 @@ package codeanticode.planetarium;
 
 
 import processing.core.*;
+import processing.opengl.PGraphics3D;
 
 /**
  * This is a template class and can be used to start a new processing library or tool.
@@ -42,14 +43,9 @@ import processing.core.*;
  *
  */
 
-public class Dome {
-	
-	// myParent is a reference to the parent sketch
-	PApplet myParent;
-
-	int myVariable = 0;
-	
-	public final static String VERSION = "##library.prettyVersion##";
+public class Dome extends PGraphics3D {
+  public final static String RENDERER = "codeanticode.planetarium.Dome";	
+	public final static String VERSION  = "##library.prettyVersion##";
 	
 
 	/**
@@ -59,8 +55,8 @@ public class Dome {
 	 * @example Hello
 	 * @param theParent
 	 */
-	public Dome(PApplet theParent) {
-		myParent = theParent;
+	public Dome() {
+		super();
 		welcome();
 	}
 	
@@ -69,36 +65,14 @@ public class Dome {
 		System.out.println("##library.name## ##library.prettyVersion## by ##author##");
 	}
 	
+
+	public void beginDraw() {
+	  super.beginDraw();
+	}
+
+  public void endDraw() {
+    super.endDraw();    
+  }
 	
-	public String sayHello() {
-		return "hello library.";
-	}
-	/**
-	 * return the version of the library.
-	 * 
-	 * @return String
-	 */
-	public static String version() {
-		return VERSION;
-	}
-
-	/**
-	 * 
-	 * @param theA
-	 *          the width of test
-	 * @param theB
-	 *          the height of test
-	 */
-	public void setVariable(int theA, int theB) {
-		myVariable = theA + theB;
-	}
-
-	/**
-	 * 
-	 * @return int
-	 */
-	public int getVariable() {
-		return myVariable;
-	}
 }
 

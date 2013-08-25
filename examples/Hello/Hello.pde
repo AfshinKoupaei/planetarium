@@ -1,19 +1,10 @@
-import template.library.*;
-
-HelloLibrary hello;
+import codeanticode.planetarium.*;
 
 void setup() {
-  size(400,400);
-  smooth();
-  
-  hello = new HelloLibrary(this);
-  
-  PFont font = createFont("",40);
-  textFont(font);
+  size(400, 400, Dome.RENDERER);
 }
 
 void draw() {
-  background(0);
+  background(255, 0, 0);
   fill(255);
-  text(hello.sayHello(), 40, 200);
 }
