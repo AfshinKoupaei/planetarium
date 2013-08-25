@@ -44,7 +44,10 @@ import processing.opengl.PShader;
 public class Dome extends PGraphics3D {
   public final static String RENDERER = "codeanticode.planetarium.Dome";	
 	public final static String VERSION  = "##library.prettyVersion##";
-	
+
+  public final static int NORMAL   = 0;
+  public final static int GRID     = 1;	
+  
   protected PShader cubeMapShader;
   protected PShape domeSphere;
   protected PImage gridTex;
@@ -56,6 +59,7 @@ public class Dome extends PGraphics3D {
   protected boolean cubeMapInit = false;
   protected int cubeMapSize = 1024;
   
+  protected boolean renderGrid = false;
   protected int currentFace;
   
   
@@ -187,6 +191,16 @@ public class Dome extends PGraphics3D {
   }
 	
   
+  protected void renderGrid(boolean value) {
+    renderGrid = value;
+  }
+  
+  
+  protected int getCurrentFace() {
+    return currentFace;
+  }
+  
+  
   private void initDome() {
     if (gridTex == null) {
       gridTex = parent.loadImage("cubeMapGrid.png");        
@@ -283,6 +297,7 @@ public class Dome extends PGraphics3D {
   
   private void endFaceDraw() {
     flush(); // Make sure that the geometry in the scene is pushed to the GPU
+    noLights(); // Disabling lights to avoid adding many times
     pgl.framebufferTexture2D(PGL.FRAMEBUFFER, PGL.COLOR_ATTACHMENT0, 
                              currentFace, 0, 0);
   }
@@ -291,9 +306,9 @@ public class Dome extends PGraphics3D {
   private void renderDome() {
     ortho();
     resetMatrix();
-    shader(cubeMapShader);
+    if (!renderGrid) shader(cubeMapShader);
     shape(domeSphere);
-    resetShader();
+    if (!renderGrid) resetShader();
   }
   
   
