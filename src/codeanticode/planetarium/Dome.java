@@ -207,8 +207,7 @@ public class Dome extends PGraphics3D {
     }
     
     if (domeSphere == null) {
-      sphereDetail(50);
-      domeSphere = createShape(SPHERE, height/2.0f);
+      domeSphere = createShape(SPHERE, height/2.0f, 50, 50);
       domeSphere.setTexture(gridTex);
       domeSphere.rotateX(HALF_PI);
       domeSphere.setStroke(false);
