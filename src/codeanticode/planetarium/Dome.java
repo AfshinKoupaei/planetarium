@@ -189,7 +189,7 @@ public class Dome extends PGraphics3D {
   
   private void initDome() {
     if (gridTex == null) {
-      gridTex = parent.loadImage("grid.png");        
+      gridTex = parent.loadImage("cubeMapGrid.png");        
     }
     
     if (domeSphere == null) {
@@ -201,8 +201,8 @@ public class Dome extends PGraphics3D {
     }
     
     if (cubeMapShader == null) {    
-      cubeMapShader = parent.loadShader("cubemapfrag2.glsl", 
-                                        "cubemapvert2.glsl"); 
+      cubeMapShader = parent.loadShader("cubeMapFrag.glsl", 
+                                        "cubeMapVert.glsl"); 
       cubeMapShader.set("EnvMap", 1);
     }
     
