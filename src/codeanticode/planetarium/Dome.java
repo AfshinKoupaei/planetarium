@@ -85,11 +85,24 @@ public class Dome extends PGraphics3D {
     if (method != null) {
       parent.registerMethod("pre", parent);
     }
+    
+    method = null;
+    try {
+      method = c.getMethod("post", new Class[] {});
+    } catch (NoSuchMethodException nsme) {
+    }
+    if (method != null) {
+      parent.registerMethod("post", parent);
+    }
+ 
   }
   
   
   public void setSize(int iwidth, int iheight) {
-    super.setSize(iwidth, iheight);  
+    if (iwidth != iheight) {
+      throw new RuntimeException("Width must be equal to height");
+    }
+    super.setSize(iwidth, iheight);
   }
   
 	
@@ -223,6 +236,8 @@ public class Dome extends PGraphics3D {
     if (!cubeMapInit) {
       PGL pgl = beginPGL();
       
+      cubeMapSize = PApplet.min(nextPowerOfTwo(width), maxTextureSize);
+      
       cubeMapTex = IntBuffer.allocate(1);
       pgl.genTextures(1, cubeMapTex);
       pgl.bindTexture(PGL.TEXTURE_CUBE_MAP, cubeMapTex.get(0));
@@ -308,6 +323,15 @@ public class Dome extends PGraphics3D {
     if (!renderGrid) shader(cubeMapShader);
     shape(domeSphere);
     if (!renderGrid) resetShader();
+  }
+  
+  
+  private static int nextPowerOfTwo(int val) {
+    int ret = 1;
+    while (ret < val) {
+      ret <<= 1;
+    }
+    return ret;
   }
   
   
