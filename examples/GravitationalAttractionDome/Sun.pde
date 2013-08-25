@@ -7,11 +7,15 @@ class Sun {
   float mass;         // Mass, tied to size
   PVector location;   // Location
   float G;            // Universal gravitational constant (arbitrary value)
+  PShape sphere;
 
   Sun() {
     location = new PVector(0,0);
     mass = 20;
     G = 0.4;
+    sphere = createShape(SPHERE, mass*2, 20);
+    sphere.setFill(false);
+    sphere.setStroke(color(255));
   }
 
 
@@ -25,14 +29,10 @@ class Sun {
   }
 
   // Draw Sun
-  void display() {
-    stroke(255);
-    noFill();
+  void display() {       
     pushMatrix();
     translate(location.x,location.y,location.z);
-    sphere(mass*2);
+    shape(sphere);
     popMatrix();
   }
 }
-
-

@@ -1,6 +1,8 @@
 /**
  * Gravitational Attraction (3D) 
  * by Daniel Shiffman.  
+ *
+ * Adapted for dome projection by Andres Colubri
  * 
  * Simulating gravitational attraction 
  * G ---> universal gravitational constant
@@ -36,38 +38,39 @@ void setup() {
   s = new Sun();
 }
 
-void draw() {
-  background(0);
-  // Setup the scene
-  sphereDetail(8);
-  lights();
-  translate(0, 0, 200);
-  rotateY(angle);
-
-
-  // Display the Sun
-  s.display();
-
-  // All the Planets
+void pre() {
   for (int i = 0; i < planets.length; i++) {
     // Sun attracts Planets
     PVector force = s.attract(planets[i]);
     planets[i].applyForce(force);
     // Update and draw Planets
     planets[i].update();
-    planets[i].display();
-  }
-
-  // Rotate around the scene
-  angle += 0.003;
+  }  
 }
 
+void draw() {
+  background(0);
+  // Setup the scene
+  sphereDetail(8);  
+  translate(0, 0, 200);
+  
+  pushMatrix();
+  translate(0, -200, 0);
+  directionalLight(255, 255, 255, 0, 0, 1); 
+  popMatrix();
+  
+  rotateY(angle);
 
+  // Display the Sun
+  s.display();
 
+  // All the Planets
+  for (int i = 0; i < planets.length; i++) {
+    planets[i].display();
+  }
+}
 
-
-
-
-
-
-
+void post() {
+  // Rotate around the scene
+  angle += 0.003;
+}  
