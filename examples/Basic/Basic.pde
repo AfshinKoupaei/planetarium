@@ -16,7 +16,7 @@
 
 import codeanticode.planetarium.*;
 
-float cubeX, cubeY;
+float cubeX, cubeY, cubeZ;
 
 void setup() {
   // For the time being, only use square windows  
@@ -25,8 +25,10 @@ void setup() {
 
 // Called one time per frame.
 void pre() {
-  cubeX += (mouseX - cubeX) * 0.2;
-  cubeY += (mouseY - cubeY) * 0.2;
+  // The dome projection is centered at (0, 0), so the mouse coordinates
+  // need to be offset by (width/2, height/2)
+  cubeX += ((mouseX - width * 0.5) - cubeX) * 0.2;
+  cubeY += ((mouseY - height * 0.5) - cubeY) * 0.2;
 }
 
 // Called five times per frame.
@@ -34,13 +36,15 @@ void draw() {
   background(0);
   
   pushMatrix();  
-  translate(0, 0, 200); // Z is now pointing towards the screen
+  translate(0, 0, -200); // Z is points towards the ground
+  
+  lights();
   
   stroke(0);  
-  fill(255, 200, 50);
+  fill(150);
   pushMatrix();
-  translate(width * 0.5 - cubeX, cubeY - height * 0.2, 0);  
-  box(20);
+  translate(cubeX, cubeY, cubeZ);  
+  box(50);
   popMatrix();
 
   stroke(255);
@@ -50,4 +54,11 @@ void draw() {
     line(0, 0, cos(ratio*TWO_PI) * 50, sin(ratio*TWO_PI) * 50);
   }
   popMatrix();
+}
+
+void keyPressed() {
+  if (key == CODED) {
+    if (keyCode == UP) cubeZ -= 5;
+    else if (keyCode == DOWN) cubeZ += 5;
+  }  
 }

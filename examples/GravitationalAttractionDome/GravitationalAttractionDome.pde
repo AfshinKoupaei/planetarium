@@ -1,4 +1,4 @@
-/**
+  /**
  * Gravitational Attraction (3D) 
  * by Daniel Shiffman.  
  *
@@ -29,7 +29,7 @@ float angle = 0;
 
 void setup() {
   size(600, 600, Dome.RENDERER);
-  //smooth();
+  smooth();
   // Some random planets
   for (int i = 0; i < planets.length; i++) {
     planets[i] = new Planet(random(0.1, 2), random(-width/2, width/2), random(-height/2, height/2), random(-100, 100));
@@ -49,15 +49,15 @@ void pre() {
 }
 
 void draw() {
-  background(0);
+  background(0);  
   // Setup the scene
-  sphereDetail(8);  
-  translate(0, 0, 200);
+  lights();
   
-  pushMatrix();
-  translate(0, -200, 0);
-  directionalLight(255, 255, 255, 0, 0, 1); 
-  popMatrix();
+  // Important: there is no need to translate to (width/2, height/2) because
+  // the dome projection is already centered at (0, 0). Some (negative) displacement
+  // is needed though, otherwise the objects will be too close to the dome's equatorial
+  // plane. The z axis points towards the bottom of the dome.
+  translate(0, 0, -200);
   
   rotateY(angle);
 

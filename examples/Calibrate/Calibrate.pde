@@ -12,38 +12,41 @@ void setup() {
 
 // Called one time per frame.
 void pre() {
-  cubeX += (mouseX - cubeX) * 0.2;
-  cubeY += (mouseY - cubeY) * 0.2;
+  // The dome projection is centered at (0, 0), so the mouse coordinates
+  // need to be offset by (width/2, height/2)
+  cubeX += ((mouseX - width * 0.5) - cubeX) * 0.2;
+  cubeY += ((mouseY - height * 0.5) - cubeY) * 0.2;
 }
 
 // Called five times per frame.
 void draw() {
   int face = camera.getFace();
   if (face == DomeCamera.POSITIVE_X) {
-    background(255, 0, 0);
+    background(240, 59, 31);
   } else if (face == DomeCamera.NEGATIVE_X) {
-    background(255, 0, 0);
+    background(240, 146, 31);
   } else if (face == DomeCamera.POSITIVE_Y) {
-    background(0, 255, 0);
+    background(30, 245, 0);
   } else if (face == DomeCamera.NEGATIVE_Y) {
-    background(0, 255, 0);
+    background(30, 232, 156);
   } else if (face == DomeCamera.POSITIVE_Z) {
-    background(0, 0, 255);
+    background(52, 148, 206);
   } else if (face == DomeCamera.NEGATIVE_Z) {
-    background(0, 0, 255);
+    background(183, 115, 13);
   }
   
   pushMatrix();  
-  translate(0, 0, 200); // Z is now pointing towards the screen
+  translate(0, 0, -200); // Z is points towards the ground
   
-  stroke(0);  
-  fill(255, 200, 50);
-  pushMatrix();
-  translate(width * 0.5 - cubeX, cubeY - height * 0.2, 0);
-  box(20);
-  popMatrix();
-
   stroke(255);
+  noFill();
+  
+  pushMatrix();
+  translate(cubeX, cubeY, 0);
+  sphereDetail(8);
+  sphere(30);
+  popMatrix();
+  
   int linesAmount = 10;
   for (int i = 0; i < linesAmount;i++) {
     float ratio = (float)i/(linesAmount-1);
