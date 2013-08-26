@@ -304,6 +304,8 @@ public class Dome extends PGraphics3D {
       camera(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f);
     }
     
+    scale(-1, 1, -1);
+    
     pgl.framebufferTexture2D(PGL.FRAMEBUFFER, PGL.COLOR_ATTACHMENT0, 
                              currentFace, cubeMapTex.get(0), 0);
   }
