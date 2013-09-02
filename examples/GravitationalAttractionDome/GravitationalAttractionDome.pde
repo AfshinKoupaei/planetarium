@@ -28,7 +28,7 @@ Sun s;
 float angle = 0;
 
 void setup() {
-  size(600, 600, Dome.RENDERER);
+  size(800, 800, Dome.RENDERER);
   smooth();
   // Some random planets
   for (int i = 0; i < planets.length; i++) {
@@ -50,15 +50,11 @@ void pre() {
 
 void draw() {
   background(0);  
+  
   // Setup the scene
   lights();
   
-  // Important: there is no need to translate to (width/2, height/2) because
-  // the dome projection is already centered at (0, 0). Some (negative) displacement
-  // is needed though, otherwise the objects will be too close to the dome's equatorial
-  // plane. The z axis points towards the bottom of the dome.
-  //translate(0, 0, -200);
-  translate(width/2, height/2);
+  translate(width/2, height/2, 300);
   
   rotateY(angle);
 
