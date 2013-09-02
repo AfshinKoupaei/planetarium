@@ -36,7 +36,7 @@ void draw() {
   background(0);
   
   pushMatrix();  
-  translate(0, 0, -200); // Z is points towards the ground
+  translate(width/2, height/2, 300);
   
   lights();
   

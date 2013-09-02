@@ -57,7 +57,8 @@ void draw() {
   // the dome projection is already centered at (0, 0). Some (negative) displacement
   // is needed though, otherwise the objects will be too close to the dome's equatorial
   // plane. The z axis points towards the bottom of the dome.
-  translate(0, 0, -200);
+  //translate(0, 0, -200);
+  translate(width/2, height/2);
   
   rotateY(angle);
 
