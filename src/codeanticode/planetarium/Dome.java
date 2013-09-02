@@ -52,6 +52,9 @@ public class Dome extends PGraphics3D {
   protected PShape domeSphere;
   protected PImage gridTex;
 
+  protected int resolution;
+  protected int offsetX, offsetY;
+  
   protected IntBuffer cubeMapFbo;
   protected IntBuffer cubeMapRbo;
   protected IntBuffer cubeMapTex;
@@ -100,8 +103,20 @@ public class Dome extends PGraphics3D {
   
   public void setSize(int iwidth, int iheight) {
     if (iwidth != iheight) {
-      throw new RuntimeException("Width must be equal to height");
-    }
+      //throw new RuntimeException("Width must be equal to height");
+      if (iwidth < iheight) {
+        resolution = iwidth;
+        offsetX = 0;
+        offsetY = iheight/2 - resolution/2;
+      } else {
+        resolution = iheight;
+        offsetX = iwidth/2 - resolution/2;
+        offsetY = 0;        
+      }
+    } else {
+      resolution = iwidth;  
+      offsetX = offsetY = 0;
+    }    
     super.setSize(iwidth, iheight);
   }
   
@@ -220,7 +235,7 @@ public class Dome extends PGraphics3D {
     }
     
     if (domeSphere == null) {
-      domeSphere = createShape(SPHERE, height/2.0f, 50, 50);
+      domeSphere = createShape(SPHERE, resolution * 0.5f, 50, 50);
       domeSphere.setTexture(gridTex);
       domeSphere.rotateX(HALF_PI);
       domeSphere.setStroke(false);
@@ -236,7 +251,7 @@ public class Dome extends PGraphics3D {
     if (!cubeMapInit) {
       PGL pgl = beginPGL();
       
-      cubeMapSize = PApplet.min(nextPowerOfTwo(width), maxTextureSize);
+      cubeMapSize = PApplet.min(nextPowerOfTwo(resolution), maxTextureSize);
       
       cubeMapTex = IntBuffer.allocate(1);
       pgl.genTextures(1, cubeMapTex);
