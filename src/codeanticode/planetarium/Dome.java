@@ -65,6 +65,7 @@ public class Dome extends PGraphics3D {
   protected boolean renderGrid = false;
   protected int currentFace;
   
+  protected Method borderMethod;  
   
 	/**
 	 * The default constructor.
@@ -98,6 +99,10 @@ public class Dome extends PGraphics3D {
       parent.registerMethod("post", parent);
     }
  
+    try {
+      borderMethod = parent.getClass().getMethod("border", new Class[] {});
+    } catch (Exception e) {
+    }    
   }
   
   
@@ -260,7 +265,7 @@ public class Dome extends PGraphics3D {
                         PGL.CLAMP_TO_EDGE);
       pgl.texParameteri(PGL.TEXTURE_CUBE_MAP, PGL.TEXTURE_WRAP_T, 
                         PGL.CLAMP_TO_EDGE);
-//      pgl.texParameteri(PGL.TEXTURE_CUBE_MAP, PGL.TEXTURE_WRAP_R, PGL.CLAMP_TO_EDGE);
+      pgl.texParameteri(PGL.TEXTURE_CUBE_MAP, PGL.TEXTURE_WRAP_R, PGL.CLAMP_TO_EDGE);
       pgl.texParameteri(PGL.TEXTURE_CUBE_MAP, PGL.TEXTURE_MIN_FILTER, 
                         PGL.NEAREST);
       pgl.texParameteri(PGL.TEXTURE_CUBE_MAP, PGL.TEXTURE_MAG_FILTER, 
@@ -336,6 +341,13 @@ public class Dome extends PGraphics3D {
   
   
   private void renderDome() {
+    if (borderMethod != null) {
+      try {
+        borderMethod.invoke(parent, new Object[] {});
+      } catch (Exception e) {
+        e.printStackTrace();
+      }      
+    }
     ortho();
     resetMatrix();
     if (!renderGrid) shader(cubeMapShader);

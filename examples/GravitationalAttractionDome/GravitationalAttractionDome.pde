@@ -67,6 +67,16 @@ void draw() {
   }
 }
 
+// Called after rendering all the faces, but before the dome sphere,
+// so it can be used to draw stuff on the corners of the screen.
+void border() {
+  perspective();
+  camera();
+  background(255);
+  fill(0);
+  text("FPS: " + frameRate, 20, 20);
+}  
+
 void post() {
   // Rotate around the scene
   angle += 0.003;
