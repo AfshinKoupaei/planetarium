@@ -50,7 +50,7 @@ public class Dome extends PGraphics3D {
   
   protected PShader cubeMapShader;
   protected PShape domeSphere;
-  protected PImage gridTex;
+  protected PShape gridSphere;
 
   protected int resolution;
   protected int offsetX, offsetY;
@@ -235,21 +235,23 @@ public class Dome extends PGraphics3D {
   
   
   private void initDome() {
-    if (gridTex == null) {
-      gridTex = parent.loadImage("cubeMapGrid.png");        
-    }
-    
     if (domeSphere == null) {
       domeSphere = createShape(SPHERE, resolution * 0.5f, 50, 50);
-      domeSphere.setTexture(gridTex);
       domeSphere.rotateX(HALF_PI);
       domeSphere.setStroke(false);
+    }
+    
+    if (gridSphere == null) {
+      gridSphere = createShape(SPHERE, resolution * 0.5f, 50, 50);
+      gridSphere.rotateX(HALF_PI);
+      gridSphere.setFill(0);
+      gridSphere.setStroke(0xFFFFFFFF);      
     }
     
     if (cubeMapShader == null) {    
       cubeMapShader = parent.loadShader("cubeMapFrag.glsl", 
                                         "cubeMapVert.glsl"); 
-      cubeMapShader.set("EnvMap", 1);
+      cubeMapShader.set("cubemap", 1);
     }
     
     
@@ -341,20 +343,28 @@ public class Dome extends PGraphics3D {
   
   
   private void renderDome() {
+    renderBorder();
+    ortho();    
+    resetMatrix();    
+    if (renderGrid) {      
+      shape(gridSphere);
+    } else {
+      shader(cubeMapShader);
+      shape(domeSphere);
+      resetShader();      
+    }
+  }
+  
+  
+  private void renderBorder() {
     if (borderMethod != null) {
       try {
         borderMethod.invoke(parent, new Object[] {});
       } catch (Exception e) {
         e.printStackTrace();
       }      
-    }
-    ortho();
-    resetMatrix();
-    if (!renderGrid) shader(cubeMapShader);
-    shape(domeSphere);
-    if (!renderGrid) resetShader();
+    }    
   }
-  
   
   private static int nextPowerOfTwo(int val) {
     int ret = 1;
