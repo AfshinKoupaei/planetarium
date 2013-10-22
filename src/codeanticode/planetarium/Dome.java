@@ -31,7 +31,6 @@ import java.lang.reflect.Method;
 import java.nio.IntBuffer;
 
 import processing.core.PApplet;
-import processing.core.PImage;
 import processing.core.PShape;
 import processing.opengl.PGL;
 import processing.opengl.PGraphics3D;
@@ -62,8 +61,15 @@ public class Dome extends PGraphics3D {
   protected boolean cubeMapInit = false;
   protected int cubeMapSize = 1024;
   
+  protected boolean renderDome = true;
   protected boolean renderGrid = false;
   protected int currentFace;
+  
+  protected boolean requestedRenderDomeChange = false;
+  protected boolean requestedRenderDome;  
+  
+  protected float domeDX, domeDY, domeDZ;
+  protected float domeScale = 1;  
   
   protected Method borderMethod;  
   
@@ -186,7 +192,20 @@ public class Dome extends PGraphics3D {
 	public void beginDraw() {
 	  super.beginDraw();
 	  
-	  if (0 < parent.frameCount) {	  
+	  if (requestedRenderDomeChange) {
+	    renderDome = requestedRenderDome;
+	    if (renderDome) {
+	      background(0xffCCCCCC);
+	    } else { 
+	      // go back to default camera and perspective
+	      perspective();
+	      camera();     
+	      currentFace = PGL.TEXTURE_CUBE_MAP_POSITIVE_Z; // Current face simply defaults to POSITIVE_Z 
+	    }	    
+	    requestedRenderDomeChange = false;
+	  }
+	  
+	  if (renderDome && 0 < parent.frameCount) {	  
 	    if (!cubeMapInit) {
 	      initDome();
 	    }
@@ -197,7 +216,7 @@ public class Dome extends PGraphics3D {
 	    pgl.bindFramebuffer(PGL.FRAMEBUFFER, cubeMapFbo.get(0));   
 	    
 	    pgl.viewport(0, 0, cubeMapSize, cubeMapSize);    
-	    super.perspective(90.0f * DEG_TO_RAD, 1.0f, 1.0f, 1025.0f);     
+	    super.perspective(90.0f * DEG_TO_RAD, 1.0f, 1.0f, cameraFar);     
 	    
 	    beginFaceDraw(PGL.TEXTURE_CUBE_MAP_POSITIVE_X);
 	  }
@@ -205,7 +224,7 @@ public class Dome extends PGraphics3D {
 
 	
   public void endDraw() {
-    if (0 < parent.frameCount) {
+    if (renderDome && 0 < parent.frameCount) {
       endFaceDraw();
 
       // Draw the rest of the cubemap faces
@@ -218,15 +237,35 @@ public class Dome extends PGraphics3D {
       
       endPGL();
       
-      renderDome(); 
+      renderDome();
     }    
     super.endDraw();    
   }
-	
+  
+  
+  protected void setOrigin(float dx, float dy, float dz) {
+    domeDX = dx; 
+    domeDY = dy;
+    domeDZ = dz;       
+  }
+  
+  
+  protected void setScale(float scale) {
+    domeScale = scale;  
+  }
+  
+  
+  protected void domeRendering(boolean value) {
+    if (renderDome != value) {
+      requestedRenderDomeChange = true;
+      requestedRenderDome = value;  
+    }
+  }
+  
   
   protected void renderGrid(boolean value) {
     renderGrid = value;
-  }
+  }  
   
   
   protected int getCurrentFace() {
@@ -340,12 +379,14 @@ public class Dome extends PGraphics3D {
     pgl.framebufferTexture2D(PGL.FRAMEBUFFER, PGL.COLOR_ATTACHMENT0, 
                              currentFace, 0, 0);
   }
-  
+
   
   private void renderDome() {
     renderBorder();
     ortho();    
     resetMatrix();    
+    translate(domeDX, domeDY, domeDZ);
+    scale(domeScale);
     if (renderGrid) {      
       shape(gridSphere);
     } else {
@@ -365,6 +406,7 @@ public class Dome extends PGraphics3D {
       }      
     }    
   }
+  
   
   private static int nextPowerOfTwo(int val) {
     int ret = 1;

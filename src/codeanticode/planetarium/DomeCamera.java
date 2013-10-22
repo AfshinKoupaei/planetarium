@@ -12,7 +12,23 @@ public class DomeCamera {
   public final static int NEGATIVE_Z = 5;
   
   protected Dome renderer;
-    
+  
+  public void enable() {
+    renderer.domeRendering(true);
+  }
+  
+  public void disable() {
+    renderer.domeRendering(false);
+  }
+  
+  public void translate(float tx, float ty, float tz) {
+    renderer.setOrigin(tx, ty, tz);
+  }
+  
+  public void scale(float s) {
+    renderer.setScale(s);
+  }
+  
   public DomeCamera(PApplet parent) {
     if (!(parent.g instanceof Dome)) {
       throw new RuntimeException("You need to use the Dome renderer");
