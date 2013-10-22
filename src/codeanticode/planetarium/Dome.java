@@ -281,9 +281,9 @@ public class Dome extends PGraphics3D {
     }
     
     if (gridSphere == null) {
-      gridSphere = createShape(SPHERE, resolution * 0.5f, 50, 50);
+      gridSphere = createShape(SPHERE, resolution * 0.5f, 25, 25);
       gridSphere.rotateX(HALF_PI);
-      gridSphere.setFill(0);
+      gridSphere.setFill(0xFF000000);
       gridSphere.setStroke(0xFFFFFFFF);      
     }
     
@@ -386,8 +386,8 @@ public class Dome extends PGraphics3D {
     ortho();    
     resetMatrix();    
     translate(domeDX, domeDY, domeDZ);
-    scale(domeScale);
-    if (renderGrid) {      
+    scale(domeScale);      
+    if (renderGrid) {   
       shape(gridSphere);
     } else {
       shader(cubeMapShader);
